@@ -55,7 +55,7 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    (!isProduction && new webpack.HotModuleReplacementPlugin()),
     (isProduction && new UglifyJsPlugin()),
     new HtmlWebpackPlugin({
       title: '{title}',
