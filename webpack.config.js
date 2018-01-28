@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -45,6 +46,8 @@ module.exports = {
     ],
   },
 
+  devtool: (!isProduction && 'cheap-module-source-map'),
+
   devServer: {
     hot: enableHMR,
     inline: true,
@@ -53,6 +56,7 @@ module.exports = {
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    (isProduction && new UglifyJsPlugin()),
     new HtmlWebpackPlugin({
       title: '{title}',
       template: 'index.html',
@@ -62,5 +66,5 @@ module.exports = {
       }),
     }),
     new ExtractTextPlugin('styles.css'),
-  ],
+  ].filter(v => !!v),
 };
