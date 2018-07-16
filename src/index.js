@@ -1,4 +1,5 @@
-import './styles/application.scss';
+/* eslint-disable no-console */
+import './styles/application.scss'
 
-console.log('Hello, world!');
-console.warn('Change the background color as you like :)');
+console.log('Hello, world!')
+console.warn('Change the background color as you like :)')

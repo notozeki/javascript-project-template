@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "webpack --progress",
-    "start": "webpack-serve --content dist/"
+    "start": "webpack-serve --content dist/",
+    "lint": "eslint *.js src/**/*.js"
   },
   "devDependencies": {
     "autoprefixer": "^8.6.5",
@@ -9,6 +10,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "css-loader": "^1.0.0",
+    "eslint": "^5.1.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.1",
     "node-sass": "^4.7.2",
