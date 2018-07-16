@@ -1,62 +1,30 @@
-const path = require('path');
-const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const enableHMR = true;
-const isProduction = process.env.NODE_ENV === 'production';
-const inDevServer = process.argv.find(v => v.includes('webpack-dev-server'));
-const isHMR = inDevServer && enableHMR;
-const extractCSS = !(isHMR) || isProduction;
+const mode = process.env.WEBPACK_SERVE ? 'development' : 'production'
+const isProduction = (mode === 'production')
+const sourceMap = !isProduction
 
 module.exports = {
-  entry: './entry.js',
-
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build'),
-  },
-
+  mode,
   module: {
     rules: [
+      { test: /\.js$/, use: 'babel-loader' },
       {
-        test: /\.js$/,
+        test: /\.(css|scss)$/,
         use: [
-          'babel-loader',
+          (isProduction
+            ? MiniCssExtractPlugin.loader
+            : { loader: 'style-loader', options: { hmr: true, sourceMap } }
+          ),
+          { loader: 'css-loader', options: { sourceMap } },
+          { loader: 'sass-loader', options: { sourceMap } },
         ],
-      },
-      {
-        test: /\.scss$/,
-        use: (extractCSS
-          ? ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [
-                { loader: 'css-loader', options: { minimize: true } },
-                'sass-loader',
-              ],
-            })
-          : [
-              { loader: 'style-loader', options: { hmr: enableHMR, sourceMap: true } },
-              { loader: 'css-loader', options: { sourceMap: true } },
-              { loader: 'sass-loader', options: { sourceMap: true } },
-            ]
-        )
       },
     ],
   },
 
-  devtool: (!isProduction && 'cheap-module-source-map'),
-
-  devServer: {
-    hot: enableHMR,
-    inline: true,
-    contentBase: './build',
-  },
-
   plugins: [
-    (!isProduction && new webpack.HotModuleReplacementPlugin()),
-    (isProduction && new UglifyJsPlugin()),
     new HtmlWebpackPlugin({
       title: '{title}',
       template: 'index.html',
@@ -65,6 +33,8 @@ module.exports = {
         collapseWhitespace: true,
       }),
     }),
-    new ExtractTextPlugin('styles.css'),
-  ].filter(v => !!v),
-};
+    new MiniCssExtractPlugin(),
+  ],
+
+  devtool: sourceMap && 'cheap-module-eval-source-map',
+}
