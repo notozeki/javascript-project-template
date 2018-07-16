@@ -18,6 +18,7 @@ module.exports = {
             : { loader: 'style-loader', options: { hmr: true, sourceMap } }
           ),
           { loader: 'css-loader', options: { sourceMap } },
+          { loader: 'postcss-loader',options: { sourceMap } },
           { loader: 'sass-loader', options: { sourceMap } },
         ],
       },

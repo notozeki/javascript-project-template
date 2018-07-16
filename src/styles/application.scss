@@ -1,3 +1,7 @@
 body {
   background-color: azure; // dummy
 }
+
+::placeholder { // to test autoprefixer
+  color: gray;
+}
